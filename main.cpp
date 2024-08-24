@@ -1,11 +1,10 @@
-#include <stdlib.h>
-#include <strings.h>
+#include "objcWrapper.h"
 
 #include <iostream>
+#include <opencv2/opencv.hpp>
+#include <stdlib.h>
+#include <strings.h>
 #include <vector>
-
-#include "objcWrapper.h"
-using namespace std;
 
 struct DetectionBox {
     float centerX;
@@ -16,14 +15,10 @@ struct DetectionBox {
 };
 
 float computeIOU(const DetectionBox& boxA, const DetectionBox& boxB) {
-    float xA =
-        std::max(boxA.centerX - boxA.width / 2, boxB.centerX - boxB.width / 2);
-    float yA = std::max(boxA.centerY - boxA.height / 2,
-                        boxB.centerY - boxB.height / 2);
-    float xB =
-        std::min(boxA.centerX + boxA.width / 2, boxB.centerX + boxB.width / 2);
-    float yB = std::min(boxA.centerY + boxA.height / 2,
-                        boxB.centerY + boxB.height / 2);
+    float xA = std::max(boxA.centerX - boxA.width / 2, boxB.centerX - boxB.width / 2);
+    float yA = std::max(boxA.centerY - boxA.height / 2, boxB.centerY - boxB.height / 2);
+    float xB = std::min(boxA.centerX + boxA.width / 2, boxB.centerX + boxB.width / 2);
+    float yB = std::min(boxA.centerY + boxA.height / 2, boxB.centerY + boxB.height / 2);
 
     float interArea = std::max(0.0f, xB - xA) * std::max(0.0f, yB - yA);
     float boxAArea = boxA.width * boxA.height;
@@ -33,9 +28,7 @@ float computeIOU(const DetectionBox& boxA, const DetectionBox& boxB) {
     return iou;
 }
 
-std::vector<int> nonMaxSuppression(const std::vector<DetectionBox>& boxes,
-                                   float iouThreshold) {
-    // std::vector<int> indices{static_cast<int>(boxes.size())};
+std::vector<int> nonMaxSuppression(const std::vector<DetectionBox>& boxes, float iouThreshold) {
     std::vector<int> indices(boxes.size());
     for (int i = 0; i < boxes.size(); i++) {
         indices[i] = i;
@@ -66,9 +59,9 @@ int main() {
     // output as 1 × 5 × 8400 3-dimensional array of floats
     float* outFloats = (float*)malloc(sizeof(float) * 1 * 5 * 8400);
 
-    predictWith(yolov8model,
-                "/Users/jiechen/Downloads/test_images/test_image_5_person.jpeg",
-                outFloats);
+    std::string imagePath = "test_image_5_person.jpeg";
+    cv::Mat mat = cv::imread(imagePath);
+    predictWith(yolov8model, mat, outFloats);
 
     int batch = 1;
     int params = 5;
@@ -87,22 +80,39 @@ int main() {
                 float centerY = outFloats[i * 1 * boxes + 1 * boxes + k];
                 float width = outFloats[i * 2 * boxes + 2 * boxes + k];
                 float height = outFloats[i * 3 * boxes + 3 * boxes + k];
-                auto box =
-                    DetectionBox{centerX, centerY, width, height, confidence};
+                auto box = DetectionBox{centerX, centerY, width, height, confidence};
                 candidateBoxes.push_back(box);
             }
         }
         // }
     }
 
-    auto keepIdx = nonMaxSuppression(candidateBoxes, 0.9);
-    for (auto i : keepIdx) {
+    auto outMat = mat.clone();
+    float factorX = mat.cols * 1.0f / 640;
+    float factorY = mat.rows * 1.0f / 640;
+
+    auto keep = nonMaxSuppression(candidateBoxes, 0.9);
+    for (auto i : keep) {
         auto box = candidateBoxes[i];
-        std::cout << "Box[ centerX: " << box.centerX
-                  << ", centerY: " << box.centerY << ", width: " << box.width
-                  << ", height:" << box.height << " ], Conf: " << box.confidence
-                  << std::endl;
+        std::cout << "Box[ centerX: " << box.centerX << ", centerY: " << box.centerY << ", width: " << box.width
+                  << ", height:" << box.height << " ], Conf: " << box.confidence << std::endl;
+
+        cv::Point topLeft(box.centerX - box.width / 2, box.centerY - box.height / 2);
+        cv::Point bottomRight(box.centerX + box.width / 2, box.centerY + box.height / 2);
+
+        // actual image size is bigger than 640;
+        topLeft.x = static_cast<int>(topLeft.x * factorX);
+        topLeft.y = static_cast<int>(topLeft.y * factorY);
+        bottomRight.x = static_cast<int>(bottomRight.x * factorX);
+        bottomRight.y = static_cast<int>(bottomRight.y * factorY);
+
+        cv::Scalar color(0, 0, 255);
+        int thickness = 2;
+        cv::rectangle(outMat, topLeft, bottomRight, color, thickness);
     }
+
+    cv::imshow("Image 0", outMat);
+    cv::waitKey(0); // 等待按键按下
 
     closeModel(yolov8model);
 }
