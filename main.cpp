@@ -68,7 +68,7 @@ int main() {
     // output as 1 × 5 × 8400 3-dimensional array of floats
     float* outFloats = (float*)malloc(sizeof(float) * 1 * 5 * 8400);
 
-    std::string imagePath = "/Users/jiechen/Downloads/test_images/test_image_5_person.jpeg";
+    std::string imagePath = "data/test_image_5_person.jpeg";
     cv::Mat mat = cv::imread(imagePath);
 
     auto t1 = std::chrono::steady_clock::now();
