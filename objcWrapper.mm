@@ -89,6 +89,8 @@ const void* loadModel(const char* modelPath) {
 
 void predictWith(const void* model, const char* imagePath, float* yoloOutput) {
     cv::Mat image = cv::imread( imagePath);
+    cv::resize(image, image, cv::Size(640, 640));
+
     CVPixelBufferRef pixelBuffer = pixelBufferFromMat(image);
     yolov8n_face_relu6Output *modelOutput = [(__bridge id)model predictionFromImage:pixelBuffer error:nil];
 
