@@ -1,0 +1,83 @@
+[
+  {
+    "shortDescription" : "Ultralytics relu6-YOLOv8n model trained on \/home\/mehrdad\/wa\/dataset_51\/exported_dataset\/face_20K\/dataset_c.yaml",
+    "metadataOutputVersion" : "3.0",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 5 × 8400)",
+        "shortDescription" : "",
+        "shape" : "[1, 5, 8400]",
+        "name" : "var_947",
+        "type" : "MultiArray"
+      }
+    ],
+    "version" : "8.2.81",
+    "modelParameters" : [
+
+    ],
+    "author" : "Ultralytics",
+    "specificationVersion" : 6,
+    "storagePrecision" : "Float16",
+    "license" : "AGPL-3.0 License (https:\/\/ultralytics.com\/license)",
+    "mlProgramOperationTypeHistogram" : {
+      "Concat" : 19,
+      "Clip" : 57,
+      "Sub" : 2,
+      "Transpose" : 1,
+      "UpsampleNearestNeighbor" : 2,
+      "Softmax" : 1,
+      "Mul" : 3,
+      "Cast" : 2,
+      "MaxPool" : 3,
+      "Add" : 8,
+      "Reshape" : 5,
+      "Sigmoid" : 1,
+      "Split" : 10,
+      "Conv" : 64
+    },
+    "computePrecision" : "Mixed (Float16, Float32, Int32)",
+    "isUpdatable" : "0",
+    "availability" : {
+      "macOS" : "12.0",
+      "tvOS" : "15.0",
+      "visionOS" : "1.0",
+      "watchOS" : "8.0",
+      "iOS" : "15.0",
+      "macCatalyst" : "15.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_mlProgram"
+    },
+    "inputSchema" : [
+      {
+        "height" : "640",
+        "colorspace" : "RGB",
+        "isOptional" : "0",
+        "width" : "640",
+        "isColor" : "1",
+        "formattedType" : "Image (Color 640 × 640)",
+        "hasSizeFlexibility" : "0",
+        "type" : "Image",
+        "shortDescription" : "",
+        "name" : "image"
+      }
+    ],
+    "userDefinedMetadata" : {
+      "stride" : "32",
+      "com.github.apple.coremltools.version" : "7.2",
+      "com.github.apple.coremltools.source" : "torch==2.4.0",
+      "com.github.apple.coremltools.source_dialect" : "TorchScript",
+      "task" : "detect",
+      "docs" : "https:\/\/docs.ultralytics.com",
+      "imgsz" : "[640, 640]",
+      "date" : "2024-08-24T10:33:45.890623",
+      "batch" : "1",
+      "names" : "{0: 'Human face'}"
+    },
+    "generatedClassName" : "yolov8n_face_relu6",
+    "method" : "predict"
+  }
+]
