@@ -1,10 +1,19 @@
 #include "objcWrapper.h"
 
+#include <chrono>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <stdlib.h>
 #include <strings.h>
 #include <vector>
+
+template <typename clock_t = std::chrono::steady_clock,
+          typename duration_t = std::chrono::milliseconds,
+          typename timep_t = std::chrono::time_point<clock_t, duration_t>>
+std::tuple<timep_t, duration_t> now_time_since(timep_t const& start) {
+    auto now = clock_t::now();
+    return {now, std::chrono::duration_cast<duration_t>(now - start)};
+}
 
 struct DetectionBox {
     float centerX;
@@ -59,9 +68,13 @@ int main() {
     // output as 1 × 5 × 8400 3-dimensional array of floats
     float* outFloats = (float*)malloc(sizeof(float) * 1 * 5 * 8400);
 
-    std::string imagePath = "test_image_5_person.jpeg";
+    std::string imagePath = "/Users/jiechen/Downloads/test_images/test_image_5_person.jpeg";
     cv::Mat mat = cv::imread(imagePath);
+
+    auto t1 = std::chrono::steady_clock::now();
     predictWith(yolov8model, mat, outFloats);
+    auto [t2, used_ms] = now_time_since(t1);
+    printf("yolov8 coreml predict use time: %lld ms\n", used_ms.count());
 
     int batch = 1;
     int params = 5;
