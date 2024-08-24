@@ -22,7 +22,7 @@ note that this repo already contains `yolov8n_face_relu6` coreml model, so it's 
 
 ## Prepare model
 
-below is the steps i use to prepare the coreml model.
+below are the steps I use to prepare the coreml model.
 
 first download model file from [link]( https://github.com/akanametov/yolov8-face/releases/download/v0.0.0/yolov8m-face.pt )
 
