@@ -1,5 +1,5 @@
 this repo is an example to show how to use apple CoreML to run yolov8-face model inference.
-although it use [yolo-face] (https://github.com/akanametov/yolo-face),
+although it use [yolo-face](https://github.com/akanametov/yolo-face),
 but it should be applicable to other yolo family models as well.
 
 
