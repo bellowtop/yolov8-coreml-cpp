@@ -5,8 +5,8 @@ set(cmake_export_compile_commands ON)
 
 add_executable(coremlapp
     main.cpp
-    objcWrapper.h
-    objcWrapper.mm
+    objc_wrapper.h
+    objc_wrapper.mm
     coreml/yolov8n_face_relu6.h
     coreml/yolov8n_face_relu6.m
 )
