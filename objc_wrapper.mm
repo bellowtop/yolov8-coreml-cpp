@@ -1,4 +1,4 @@
-#import "objcWrapper.h"
+#import "objc_wrapper.h"
 
 #import "coreml/yolov8n_face_relu6.h"
 
